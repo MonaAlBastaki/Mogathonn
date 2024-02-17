@@ -34,7 +34,7 @@ android {
         jvmTarget = "1.8"
     }
 }
-
+val camerax_version = "1.0.1"
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -44,4 +44,14 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // CameraX core library
+    implementation("androidx.camera:camera-camera2:$camerax_version")
+    implementation("androidx.camera:camera-lifecycle:$camerax_version")
+    implementation("androidx.camera:camera-core:$camerax_version")
+
+    // CameraX View class
+    implementation("androidx.camera:camera-view:1.0.0-alpha24")
+    // If you plan to use CameraX Extensions (optional)
+    // implementation("androidx.camera:camera-extensions:1.0.0-alpha24")
 }
