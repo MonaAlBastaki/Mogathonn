@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.io.File
 import android.widget.Button
-import com.example.mog.R
 import androidx.camera.view.PreviewView
+import android.util.Log
 
 class CameraActivity : AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
@@ -21,14 +21,17 @@ class CameraActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
+        Log.d("CameraActivity", "onCreate called")
 
         // Initialize ExecutorService
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         // Request camera permissions
         if (!allPermissionsGranted()) {
+            Log.d("CameraActivity", "Requesting permissions")
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         } else {
+            Log.d("CameraActivity", "Starting camera")
             startCamera()
         }
 
@@ -39,6 +42,7 @@ class CameraActivity : AppCompatActivity() {
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
+            Log.d("CameraActivity", "CameraProvider is available")
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
             val preview = Preview.Builder().build().also {
@@ -54,11 +58,13 @@ class CameraActivity : AppCompatActivity() {
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             } catch (exc: Exception) {
                 // Handle exception
+                Log.e("CameraActivity", "Use case binding failed", exc)
             }
         }, ContextCompat.getMainExecutor(this))
     }
 
     private fun takePhoto() {
+        Log.d("CameraActivity", "Taking photo")
         val imageCapture = imageCapture ?: return
 
         // Assuming a method to create a file for storing the image
@@ -101,9 +107,10 @@ class CameraActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
+                Log.d("CameraActivity", "Permissions granted by the user.")
                 startCamera()
             } else {
-                // Handle the case where permission is not granted
+                Log.d("CameraActivity", "Permissions not granted by the user.")
             }
         }
     }
